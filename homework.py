@@ -1,6 +1,5 @@
 class InfoMessage:
     """Информационное сообщение о тренировке."""
-
     def __init__(self,
                  training_type,
                  duration: float,
@@ -23,9 +22,9 @@ class InfoMessage:
 
 class Training:
     """Базовый класс тренировки."""
-    LEN_STEP = 0.65
-    M_IN_KM = 1000
-    HOURS_IN_MIN = 60
+    LEN_STEP: float = 0.65
+    M_IN_KM: int = 1000
+    HOURS_IN_MIN: int = 60
 
     def __init__(self,
                  action: int,
@@ -58,8 +57,8 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
-    CALORIES_MEAN_SPEED_MULTIPLIER = 18
-    CALORIES_MEAN_SPEED_SHIFT = 1.79
+    CALORIES_MEAN_SPEED_MULTIPLIER: int = 18
+    CALORIES_MEAN_SPEED_SHIFT: float = 1.79
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
@@ -71,10 +70,10 @@ class Running(Training):
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-    CALORIES_BURNED_MINUTE = 0.035
-    KM_H_TO_METR_S = 0.278
-    CNST_WLK = 0.029
-    CM_IN_METR = 100
+    CALORIES_BURNED_MINUTE: float = 0.035
+    KM_H_TO_METR_S: float = 0.278
+    CNST_WLK: float = 0.029
+    CM_IN_METR: int = 100
 
     def __init__(self,
                  action: int,
@@ -98,9 +97,9 @@ class SportsWalking(Training):
 
 class Swimming(Training):
     """Тренировка: плавание."""
-    LEN_STEP = 1.38
-    CNST_CALORIES_SWM1 = 1.1
-    CNST_CALORIES_SWM2 = 2
+    LEN_STEP: float = 1.38
+    CNST_CALORIES_SWM1: float = 1.1
+    CNST_CALORIES_SWM2: int = 2
 
     def __init__(self,
                  action: int,
@@ -129,13 +128,18 @@ def read_package(workout_type: str, data: list) -> Training:
     training_types: dict = {'SWM': Swimming,
                             'RUN': Running,
                             'WLK': SportsWalking}
-    return training_types[workout_type](*data)
+    if workout_type in training_types:
+        return training_types[workout_type](*data)
+    return None
 
 
 def main(training: Training) -> None:
     """Главная функция."""
-    info: Training = training.show_training_info()
-    print(info.get_message())
+    try:
+        info: Training = training.show_training_info()
+        print(info.get_message())
+    except AttributeError:
+        ...
 
 
 if __name__ == '__main__':
